@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Breeds | 猫咪品种百科</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* 全局变量 */
+        :root {
+            --primary: #f093b7;
+            --primary-light: #fadadd;
+            --dark: #2d3436;
+            --light: #f8f9fa;
+            --gray: #636e72;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* 导航栏 */
+        nav {
+            background-color: white;
+            box-shadow: var(--shadow);
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* 英雄区 */
+        .hero {
+            height: 70vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 5%;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #e87fa8;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        /* 主要内容区 */
+        main {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 5%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary);
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* 猫咪卡片布局 */
+        .breed-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* 猫咪卡片样式 */
+        .breed-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .breed-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .breed-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--primary-light);
+        }
+
+        .breed-content {
+            padding: 1.5rem;
+        }
+
+        .breed-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .breed-origin {
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .breed-desc {
+            color: var(--dark);
+            margin-bottom: 1.2rem;
+        }
+
+        .breed-traits {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .trait {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+        }
+
+        .trait i {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-top: 0.2rem;
+        }
+
+        /* 页脚 */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 5%;
+            margin-top: 5rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            color: #b9b9b9;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .nav-links {
+                gap: 1.2rem;
+            }
+
+            .breed-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                padding: 1rem 3%;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                height: 60vh;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+    <!-- 引入图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-cat"></i>
+                <span>CatPedia</span>
+            </a>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#breeds">Breeds</a>
+                <a href="#about">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区 -->
+    <section class="hero" id="home">
+        <h1>Discover the World of Cat Breeds</h1>
+        <p>Explore the unique characteristics, personalities, and care needs of your favorite feline friends.</p>
+        <a href="#breeds" class="btn">Explore Breeds</a>
+    </section>
+
+    <!-- 主要内容：猫咪品种 -->
+    <main>
+        <section id="breeds">
+            <h2 class="section-title">Popular Cat Breeds</h2>
+            <div class="breed-container">
+                <!-- 布偶猫 -->
+                <div class="breed-card">
+                    <img src="https://images.unsplash.com/photo-1574144113027-215169207775?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Ragdoll Cat" class="breed-img">
+                    <div class="breed-content">
+                        <h3 class="breed-name">Ragdoll <span><i class="fas fa-paw"></i></span></h3>
+                        <p class="breed-origin">Origin: United States</p>
+                        <p class="breed-desc">Known as the "gentle giants" of the cat world, Ragdolls are extremely affectionate and docile. They often go limp when picked up, hence their name.</p>
+                        <div class="breed-traits">
+                            <div class="trait">
+                                <i class="fas fa-eye"></i>
+                                <span><strong>Appearance:</strong> Long, silky fur, blue eyes, large size.</span>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-heart"></i>
+                                <span><strong>Personality:</strong> Calm, social, loves human companionship.</span>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-shower"></i>
+                                <span><strong>Care:</strong> Weekly brushing to prevent matting.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 英国短毛猫 -->
+                <div class="breed-card">
+                    <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1628&q=80" alt="British Shorthair" class="breed-img">
+                    <div class="breed-content">
+                        <h3 class="breed-name">British Shorthair <span><i class="fas fa-paw"></i></span></h3>
+                        <p class="breed-origin">Origin: United Kingdom</p>
+                        <p class="breed-desc">One of the oldest cat breeds, the British Shorthair is known for its round face, dense coat, and easygoing nature—perfect for apartment living.</p>
+                        <div class="breed-traits">
+                            <div class="trait">
+                                <i class="fas fa-eye"></i>
+                                <span><strong>Appearance:</strong> Stocky build, dense short fur, copper/gold eyes.</span>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-heart"></i>
+                                <span><strong>Personality:</strong> Independent, calm, low-maintenance.</span>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-shower"></i>
+                                <span><strong>Care:</strong> Bi-weekly brushing, monitor weight to avoid obesity.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 美国短毛猫 -->
+                <div class="breed-card">
+                    <img src="https://images.unsplash.com/photo-1592194996308-20238e7593333?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="American Shorthair" class="breed-img">
+                    <div class="breed-content">
+                        <h3 class="breed-name">American Shorthair <span><i class="fas fa-paw"></i></span></h3>
+                        <p class="breed-origin">Origin: United States</p>
+                        <p class="breed-desc">A sturdy and healthy breed, the American Shorthair is playful yet gentle, making them great family pets. They have a distinctive tabby pattern.</p>
+                        <div class="breed-traits">
+                            <div class="trait">
+                                <i class="fas fa-eye"></i>
+                                <span><strong>Appearance:</strong> Muscular build, short thick fur, variety of patterns.</span>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-heart"></i>
+                                <span><strong>Personality:</strong> Playful, adaptable, good with children.</span>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-shower"></i>
+                                <span><strong>Care:</strong> Weekly brushing, regular exercise to stay active.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 暹罗猫 -->
+                <div class="breed-card">
+                    <img src="https://images.unsplash.com/photo-1589977906626-1221180097fe5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Siamese Cat" class="breed-img">
+                    <div class="breed-content">
+                        <h3 class="breed-name">Siamese <span><i class="fas fa-paw"></i></span></h3>
+                        <p class="breed-origin">Origin: Thailand (Siam)</p>
+                        <p class="breed-desc">Famous for their vocal nature and striking color-point coat, Siamese cats are highly intelligent and form strong bonds with their owners.</p>
+                        <div class="breed-traits">
+                            <div class="trait">
+                                <i class="fas fa-eye"></i>
+                                <span><strong>Appearance:</strong> Slender body, short fur, blue eyes, color points on ears/face/tail.</span>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-heart"></i>
+                                <span><strong>Personality:</strong> Vocal, social, intelligent, demands attention.</span>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-shower"></i>
+                                <span><strong>Care:</strong> Minimal brushing, lots of interactive play.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 加菲猫（异国短毛猫） -->
+                <div class="breed-card">
+                    <img src="https://images.unsplash.com/photo-1604908176281-92f25e1846055?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Exotic Shorthair" class="breed-img">
+                    <div class="breed-content">
+                        <h3 class="breed-name">Exotic Shorthair <span><i class="fas fa-paw"></i></span></h3>
+                        <p class="breed-origin">Origin: United States</p>
+                        <p class="breed-desc">Known as the "lazy man's Persian", they have the Persian's cute flat face but short fur. They are quiet and affectionate lap cats.</p>
+                        <div class="breed-traits">
+                            <div class="trait">
+                                <i class="fas fa-eye"></i>
+                                <span><strong>Appearance:</strong> Round face, short dense fur, compact body.</span>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-heart"></i>
+                                <span><strong>Personality:</strong> Quiet, laid-back, loves to cuddle.</span>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-shower"></i>
+                                <span><strong>Care:</strong> Weekly brushing, clean facial folds regularly.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 缅因猫 -->
+                <div class="breed-card">
+                    <img src="https://images.unsplash.com/photo-1547573854-74d2a71d00773?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Maine Coon" class="breed-img">
+                    <div class="breed-content">
+                        <h3 class="breed-name">Maine Coon <span><i class="fas fa-paw"></i></span></h3>
+                        <p class="breed-origin">Origin: United States (Maine)</p>
+                        <p class="breed-desc">The largest domestic cat breed, Maine Coons are gentle, playful, and known for their bushy tails and water-resistant fur.</p>
+                        <div class="breed-traits">
+                            <div class="trait">
+                                <i class="fas fa-eye"></i>
+                                <span><strong>Appearance:</strong> Giant size, long shaggy fur, bushy tail, tufted ears.</span>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-heart"></i>
+                                <span><strong>Personality:</strong> Gentle, playful, good with other pets.</span>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-shower"></i>
+                                <span><strong>Care:</strong> Weekly brushing, regular nail trimming (due to size).</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关于页面 -->
+        <section id="about" style="margin-top: 5rem;">
+            <h2 class="section-title">About CatPedia</h2>
+            <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: var(--shadow); text-align: center;">
+                <p style="font-size: 1.1rem; color: var(--dark);">A comprehensive guide to cat breeds, created for cat lovers and enthusiasts.</p>
+                <p style="margin-top: 1rem; color: var(--gray);">Designed and developed with ❤️ using HTML & CSS</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">CatPedia</div>
+            <p class="footer-text">Celebrating the beauty and diversity of our feline companions around the world.</p>
+            <div class="copyright">© 2026 CatPedia | All Rights Reserved</div>
+        </div>
+    </footer>
+</body>
+</html>
